@@ -46,6 +46,7 @@ export { createNativeView, ELEMENT_REF, isOn } from './runtimeHelpers';
 
 export * from '@vue/runtime-core';
 export { vShow } from './directives/vShow';
+export { useCssModule, useCssVars } from './cssVars';
 export { $closeModal, $showModal } from './plugins/modals';
 export { $navigateBack, $navigateTo } from './plugins/navigation';
 export { KeepAlive, TransitionGroup } from './renderer/runtimeDomOverrides';

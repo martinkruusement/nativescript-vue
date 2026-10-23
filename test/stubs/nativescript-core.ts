@@ -5,6 +5,19 @@
  */
 type Listener = (...args: any[]) => void;
 
+/**
+ * Style properties are plain fields. Unscoped css variables are kept in a map
+ * as in core, without core's lookup through the parent views.
+ */
+export class Style {
+  unscopedCssVariables = new Map<string, string>();
+  [key: string]: any;
+
+  setUnscopedCssVariable(name: string, value: string) {
+    this.unscopedCssVariables.set(name, value);
+  }
+}
+
 export class ViewBase {
   static disposeNativeViewEvent = 'disposeNativeView';
   static closedModallyEvent = 'closedModally';
@@ -12,7 +25,7 @@ export class ViewBase {
   _parent: ViewBase | null = null;
   _children: ViewBase[] = [];
   _listeners = new Map<string, Listener[]>();
-  style: Record<string, any> = {};
+  style = new Style();
   text: any;
   className = '';
   [key: string]: any;

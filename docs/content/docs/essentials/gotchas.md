@@ -29,6 +29,34 @@ Text children of an element are joined and set as its `text` property, so the fa
 
 `v-show` sets `visibility: collapsed` on the view rather than `display: none`.
 
+### `v-bind()` in `<style>`
+
+`v-bind()` in an SFC `<style>` block binds a CSS value to component state, as in web Vue:
+
+```vue
+<script setup>
+import { ref } from 'nativescript-vue';
+
+const color = ref('red');
+</script>
+
+<template>
+  <Label text="Tap me" class="title" @tap="color = 'blue'" />
+</template>
+
+<style scoped>
+.title {
+  color: v-bind(color);
+}
+</style>
+```
+
+The values are set as CSS variables on the component's root view, like an inline style, so `var()` resolves them on that view and on every view inside it. Each change re-applies the CSS of the root view and all of its descendants. That is fine for a theme color, but expensive for a value that changes on every frame, such as a scroll offset: bind those with `:style` instead.
+
+The bundler has to compile the `<style>` block with `@vue/compiler-sfc`, which rewrites `v-bind()` to `var()`. `@nativescript/webpack` does, and so do `@nativescript/vite` builds without HMR (`--no-hmr` and release builds). The `@nativescript/vite` HMR dev server does not yet ([NativeScript/NativeScript#11185](https://github.com/NativeScript/NativeScript/issues/11185)), so the bound values have no effect there.
+
+`useCssModule()` is available too. It returns the class map the bundler injects for a `<style module>` block, the same object templates read as `$style`. `@nativescript/webpack` and the `@nativescript/vite` HMR dev server do not generate that class map yet.
+
 ### `v-model` only works on elements that declare a model pair
 
 An element supports `v-model` only if a model prop/event pair is registered for it. The built-ins are:
